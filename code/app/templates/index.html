@@ -9,20 +9,21 @@
 
 {% block content %}
 
-    <div style="width:75%;margin:auto;margin-top:100px;line-height:2em;min-height:6em;">
-	    <div class="row">
-		    <div class="col-sm-10">
-        			<h2 id="pidea"></h2>
-		</div>
-		<div class="col-sm-2">
-        		<img src="/static/refresh-icon.svg" onClick="javascript:update();" style="height:2.5em;cursor:pointer;margin-left:10px;" />
-			<br />
-			<br />
-			<br />
-        		<img src="/static/save-icon.svg" onClick="javascript:save();" style="height:2.5em;margin-left:10px;cursor:pointer;" />
-		</div>
+	    <div class="row" >
+                    <div class="col-sm-1 hidden-xs" style="">
+        		<img src="/static/save-icon.svg" onClick="javascript:save();" style="height:2.5em;cursor:pointer;" />
+                    </div>
+		    <div class="col-sm-10 col-xs-10"><h2 id="pidea" style="margin-top:0;"></h2></div>
+                    <div class="hidden-sm col-xs-2">
+        		<img src="/static/save-icon.svg" onClick="javascript:save();" style="height:2.5em;cursor:pointer;" />
+                        <br />
+                        <br />
+        		<img src="/static/refresh-icon.svg" onClick="javascript:update();" style="height:2.5em;cursor:pointer;margin-top:40px;" />
+                    </div>
+		    <div class="col-sm-1 hidden-xs" style="">
+        		<img src="/static/refresh-icon.svg" onClick="javascript:update();" style="height:2.5em;cursor:pointer;" />
+		    </div>
 	    </div>
-    </div>
 
     <div id="ideas" style="margin-top:100px;"></div>
 
