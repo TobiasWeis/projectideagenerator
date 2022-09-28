@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <div>
+      <img src="/static/idea-icon.svg" style="height:1.5em;margin-right:5px" />
+      <h1 style="display:inline-block; vertical-align:middle;">{% block title %}Random project idea{% endblock %}</h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div style="width:50%;margin:auto;margin-top:33%;">
+        <h2 id="pidea"></h2>
+
+        <img src="/static/refresh-icon.svg" onClick="javascript:update();" style="height:1.5em;float:right;cursor:pointer;margin-left:10px;">
+        <img src="/static/save-icon.svg" onClick="javascript:save();" style="height:1.5em;float:right;cursor:pointer;">
+    </div>
+
+    <div id="ideas" style="margin-top:100px;"></div>
+
+<script type="text/javascript">
+
+function update(){
+    $.get("api/random", function(data){
+        $("#pidea").html(data);
+    })
+}
+
+function save(){
+	content = $('#pidea').text();
+
+	$.ajax({
+		type: "POST",
+		url: "/api/idea",
+		data: JSON.stringify({name:content}),
+		contentType: "application/json; charset=utf-8",
+		dataType: "json",
+		success: function(data){
+			update_ideas();
+		},
+		error: function(errMsg) {
+			alert(errMsg);
+		}
+	});
+}
+
+function del(id){
+    $.ajax({
+        url: '/api/idea/'+id,
+        type: 'DELETE',
+        success: function(result) {
+            update_ideas();
+        }
+    });
+}
+
+function update_ideas(){
+    $.get("api/idea", function(data){
+        $("#ideas").html("");
+
+        $("#ideas").append("<ul>");
+        data.forEach(function(idea){
+            $("#ideas").append('<li>'+idea.name+"<span onClick='javascript:del("+idea.id+");' style='color:red;margin-left:5px;cursor:pointer;'>X</span></li>");
+        })
+        $("#ideas").append("</ul>");
+    })
+}
+
+$( document ).ready(function() {
+    update();
+    update_ideas();
+});
+</script>
+{% endblock %}
