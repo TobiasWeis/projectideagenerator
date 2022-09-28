@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, abort
 from flask import render_template
+import re, html
 import datetime
 import random
 
@@ -10,6 +11,18 @@ from app.models import *
 from app.utils import GetRowVals
 
 api_blueprint = Blueprint('api_blueprint', __name__, url_prefix="/api", template_folder='../templates/', static_folder='static', static_url_path='../static/')
+
+def sanitize(text):
+    tag_re = re.compile(r'(<!--.*?-->|<[^>]*>)')
+
+    # Remove well-formed tags, fixing mistakes by legitimate users
+    no_tags = tag_re.sub('', text)
+
+    # Clean up anything else by escaping
+    ready_for_web = html.escape(no_tags)
+
+    return ready_for_web
+
 
 @api_blueprint.route('/version', methods=['POST'])
 def version():
@@ -86,7 +99,7 @@ def delete_actor(id):
 def insert_actor():
     if not request.json: abort(400)
 
-    actor = Actor(name=request.json.get('name'))
+    actor = Actor(name=sanitize(request.json.get('name')))
     db.session.add(actor)
     db.session.commit()
 
@@ -107,7 +120,7 @@ def delete_action(id):
 def insert_action():
     if not request.json: abort(400)
 
-    action = Action(name=request.json.get('name'))
+    action = Action(name=sanitize(request.json.get('name')))
     db.session.add(action)
     db.session.commit()
 
@@ -128,7 +141,7 @@ def delete_object(id):
 def insert_object():
     if not request.json: abort(400)
 
-    obj = Object(name=request.json.get('name'))
+    obj = Object(name=sanitize(request.json.get('name')))
     db.session.add(obj)
     db.session.commit()
 
@@ -150,7 +163,7 @@ def delete_technology(id):
 def insert_technology():
     if not request.json: abort(400)
 
-    technology = Technology(name=request.json.get('name'))
+    technology = Technology(name=sanitize(request.json.get('name')))
     db.session.add(technology)
     db.session.commit()
 
@@ -172,7 +185,7 @@ def delete_industry(id):
 def insert_industry():
     if not request.json: abort(400)
 
-    industry = Industry(name=request.json.get('name'))
+    industry = Industry(name=sanitize(request.json.get('name')))
     db.session.add(industry)
     db.session.commit()
 
@@ -194,7 +207,7 @@ def delete_idea(id):
 def insert_idea():
     if not request.json: abort(400)
 
-    idea = Idea(name=request.json.get('name'))
+    idea = Idea(name=sanitize(request.json.get('name')))
     db.session.add(idea)
     db.session.commit()
 
